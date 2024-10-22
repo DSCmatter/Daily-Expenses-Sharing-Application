@@ -40,6 +40,7 @@ router.get('/:userId', async (req, res) => {
         const database = client.db('expenseSharing');
         const expensesCollection = database.collection('expenses');
 
+        // Fetch expenses for the specified user
         const expenses = await expensesCollection.find({ userId: req.params.userId }).toArray();
         res.json(expenses);
     } catch (error) {
@@ -49,6 +50,25 @@ router.get('/:userId', async (req, res) => {
     }
 });
 
-// Additional expense routes will go here...
+// Retrieve a specific expense by ID
+router.get('/expense/:expenseId', async (req, res) => {
+    try {
+        await client.connect();
+        const database = client.db('expenseSharing');
+        const expensesCollection = database.collection('expenses');
+
+        // Use ObjectId to query the specific expense
+        const expense = await expensesCollection.findOne({ _id: ObjectId(req.params.expenseId) });
+        if (expense) {
+            res.json(expense);
+        } else {
+            res.status(404).json({ message: 'Expense not found.' });
+        }
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    } finally {
+        await client.close();
+    }
+});
 
 module.exports = router;

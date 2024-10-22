@@ -45,8 +45,3 @@ exports.getAllExpenses = async (req, res) => {
     res.status(400).json({ error: error.message });
   }
 };
-
-// Download balance sheet
-exports.downloadBalanceSheet = async (req, res) => {
-  // Implement file generation logic (CSV or PDF)
-};
